@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Welcome to the Gym Management System</h1>
+    <p class="lead">Easily manage your lessons, enrollments, and user profiles.</p>
+    <hr class="my-4">
+
+    {% if user.is_authenticated %}
+        <p>You are logged in as {{ user.username }}.</p>
+        {% if user.is_teacher %}
+            <a href="{% url 'teacher_dashboard' %}" class="btn btn-primary btn-lg">Go to Teacher Dashboard</a>
+        {% elif user.is_student %}
+            <a href="{% url 'student_dashboard' %}" class="btn btn-primary btn-lg">Go to Student Dashboard</a>
+        {% elif user.is_manager %}
+            <a href="{% url 'user_management' %}" class="btn btn-primary btn-lg">Go to User Management</a>
+        {% endif %}
+    {% else %}
+        <p>If you already have an account, please log in. Otherwise, register to start using the system.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Login</a>
+        <a href="{% url 'register' %}" class="btn btn-success btn-lg">Register</a>
+    {% endif %}
+</div>
+{% endblock %}

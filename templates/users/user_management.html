@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>User Management</h2>
+
+    <!-- Arama Formu -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-10">
+                <input type="text" name="query" value="{{ query }}" class="form-control" placeholder="Search by username">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Kullanıcı Listesi Tablosu -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Skills</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.get_role_display }}</td>
+                <td>
+                    {% if user.is_teacher %}
+                        {% if user.skills.exists %}
+                            <ul>
+                                {% for skill in user.skills.all %}
+                                    <li>{{ skill.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span>No skills listed</span>
+                        {% endif %}
+                    {% else %}
+                        <span>N/A</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'user_detail' user.id %}" class="btn btn-info btn-sm">View Details</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No users found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>All Lessons</h2>
+
+    <!-- Arama Formu -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-5">
+                <input type="text" name="query" value="{{ query }}" class="form-control" placeholder="Search by title, description or teacher">
+            </div>
+            <div class="col-md-5">
+                <input type="date" name="date" value="{{ date_query }}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Dersler Tablosu -->
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>Lesson Title</th>
+                <th>Teacher</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lesson in page_obj %}
+            <tr>
+                <td>{{ lesson.title }}</td>
+                <td>{{ lesson.teacher.username }}</td>
+                <td>{{ lesson.start_date|date:"Y-m-d H:i" }}</td>
+                <td>{{ lesson.end_date|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No lessons found for selected criteria.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Sayfalama -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if query %}&query={{ query }}{% endif %}{% if date_query %}&date={{ date_query }}{% endif %}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if query %}&query={{ query }}{% endif %}{% if date_query %}&date={{ date_query }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if query %}&query={{ query }}{% endif %}{% if date_query %}&date={{ date_query }}{% endif %}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if query %}&query={{ query }}{% endif %}{% if date_query %}&date={{ date_query }}{% endif %}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}

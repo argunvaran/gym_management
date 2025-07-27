@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page</title>
+    <!-- Statik CSS'i ekle -->
+    <link rel="stylesheet" href="{% static 'testapp/css/style.css' %}">
+</head>
+<body>
+    <h1>Test Page for TestApp</h1>
+    <p>This is a test page with custom CSS and JS.</p>
+    <!-- Statik JS'i ekle -->
+    <script src="{% static 'testapp/js/script.js' %}"></script>
+</body>
+</html>

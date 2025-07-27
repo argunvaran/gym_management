@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Products</h2>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatewords:10 }}</p>
+                        <p class="card-text"><strong>Price:</strong> ${{ product.price }}</p>
+                        <button onclick="addToCart({{ product.id }})" class="btn btn-success btn-sm">Add to Cart</button>
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function addToCart(productId) {
+        fetch(`/add_to_cart/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            const cartCount = document.getElementById("cart-count");
+
+            // Sepet sayısını güncelle ve badge’i kontrol et
+            if (data.cart_items_count > 0) {
+                cartCount.textContent = data.cart_items_count;
+                cartCount.style.display = 'inline-block';  // Badge’i göster
+            } else {
+                cartCount.style.display = 'none';  // Badge’i gizle
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+
+{% endblock %}

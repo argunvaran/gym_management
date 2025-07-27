@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Lesson List{% endblock %}
+
+{% block content %}
+
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Lesson List</h2>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Lesson Type</th>
+                    <th>Teacher</th>
+                    <th>Max Students</th>
+                    <th>Start Date</th>
+                    <th>Time of Day</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lesson in lessons %}
+                <tr>
+                    <td>{{ lesson.title }}</td>
+                    <td>{{ lesson.description|truncatewords:10 }}</td>
+                    <td>{{ lesson.get_lesson_type_display }}</td>
+                    <td>{{ lesson.teacher.username }}</td>
+                    <td>{{ lesson.max_students }}</td>
+                    <td>{{ lesson.start_date|date:"Y-m-d" }}</td>
+                    <td>{{ lesson.time_of_day|time:"H:i" }}</td>
+                    <td>
+                        <a href="{% url 'lesson_detail' lesson.id %}" class="btn btn-info btn-sm">Details</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No lessons available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+{% endblock %}

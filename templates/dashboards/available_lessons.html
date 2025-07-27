@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Available Lessons{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Available Lessons</h2>
+
+    <!-- Arama ve Tarih Filtreleme Formu -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-5">
+                <input type="text" name="query" value="{{ query }}" class="form-control" placeholder="Search by teacher name, title or description">
+            </div>
+            <div class="col-md-5">
+                <input type="date" name="date" value="{{ date_query }}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Dersler Tablosu -->
+    {% if page_obj %}
+        <table class="table table-striped mt-4">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Lesson Title</th>
+                    <th>Teacher</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Capacity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lesson in page_obj %}
+                <tr>
+                    <td>
+                        <a href="{% url 'lesson_detail' lesson.id %}">{{ lesson.title }}</a>
+                    </td>
+                    <td>{{ lesson.teacher.username }}</td>
+                    <td>{{ lesson.start_date|date:"Y-m-d H:i" }}</td>
+                    <td>{{ lesson.end_date|date:"Y-m-d H:i" }}</td>
+                    <td>{{ lesson.enrollments.count }}/{{ lesson.max_students }}</td>
+                    <td>
+                        {% if lesson.enrollments.count < lesson.max_students %}
+                            <a href="{% url 'request_enrollment' lesson.id %}" class="btn btn-primary btn-sm">Request to Join</a>
+                        {% else %}
+                            <span class="badge bg-secondary">Full</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No lessons found for the selected criteria.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Sayfalama -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No lessons available. Use the filters to search.</p>
+    {% endif %}
+</div>
+{% endblock %}

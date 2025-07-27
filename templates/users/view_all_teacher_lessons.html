@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>All Teachers' Lessons</h2>
+
+    <!-- Arama Formu -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-5">
+                <input type="text" name="query" value="{{ query }}" class="form-control" placeholder="Search by teacher name or lesson title">
+            </div>
+            <div class="col-md-5">
+                <input type="date" name="date" value="{{ date_query }}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Dersler Tablosu -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Lesson Title</th>
+                <th>Teacher</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lesson in lessons %}
+            <tr>
+                <td>{{ lesson.title }}</td>
+                <td>{{ lesson.teacher.username }}</td>
+                <td>{{ lesson.start_date|date:"Y-m-d H:i" }}</td>
+                <td>{{ lesson.end_date|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <a href="{% url 'lesson_detail' lesson.id %}" class="btn btn-info btn-sm">View Details</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No lessons found for the selected criteria.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

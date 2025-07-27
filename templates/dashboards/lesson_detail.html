@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Lesson Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3>{{ lesson.title }}</h3>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ lesson.description }}</p>
+
+            <div class="mb-3">
+                <h5>Lesson Capacity</h5>
+                <p class="mb-0">Approved Students: <strong>{{ approved_count }} / {{ max_students }}</strong></p>
+            </div>
+
+            <div class="mb-3">
+                <h5>Lesson Schedule</h5>
+                <table class="table table-bordered mt-3">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lesson_day in lesson_days %}
+                        <tr>
+                            <td>{{ lesson_day.date|date:"l, d M Y" }}</td> <!-- Gün ve tarih formatı -->
+                            <td>{{ lesson_day.start_time }}</td>
+                            <td>{{ lesson_day.end_time }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <h5>Enrolled Students</h5>
+            <table class="table table-bordered mt-3">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Student</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in enrollments %}
+                    <tr>
+                        <td>{{ enrollment.student.username }}</td>
+                        <td>{{ enrollment.status|capfirst }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-muted">
+            Lesson created by {{ lesson.teacher.username }} on {{ lesson.start_date|date:"Y-m-d" }}
+        </div>
+    </div>
+</div>
+{% endblock %}
